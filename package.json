@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AndrewRMorgan/node-timestamp-microservice.git"
+  },
   "keywords": [
     "node",
     "timestamp",
@@ -13,5 +17,10 @@
     "freecodecamp"
   ],
   "author": "AndrewRMorgan",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "moment": "^2.19.1"
+  }
 }
