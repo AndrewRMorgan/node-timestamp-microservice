@@ -2,25 +2,37 @@
 
 var express = require('express');
 var app = express();
-var bodyParser = require('body-parser');
-var routes = require('./app/routes/index.js');
-var api = require('./app/api/timestamp.js');
+var moment = require("moment");
 
+app.use("/", express.static(__dirname + "/public"))
 
-app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "GET")
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+app.get("/:query", function(req, res) {
+  var date = req.params.query;
+  var unix = null;
+  var natural = null;
+
+  if (+date >= 0) {
+    unix = +date;
+    natural = convertToNatural(unix);
+  }
+
+  if (isNaN(+date) && moment(date).isValid()) {
+    unix = +convertToUnix(date)
+    natural = moment(date).format("MMMM D, YYYY");
+  }
+
+  res.json({"unix": unix, "natural": natural});
 });
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-app.use('/public', express.static(process.cwd() + '/public'));
+
+function convertToNatural(unix) {
+  return moment.unix(unix).format("MMMM D, YYYY");
+}
+
+function convertToUnix(natural) {
+  return moment(natural).format("X");
+}
 
 var port = process.env.PORT || 8080;
-
-routes(app);
-api(app);
 
 app.listen(port, function() {
   console.log('The server is listening on port ' + port);
